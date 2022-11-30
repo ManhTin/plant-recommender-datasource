@@ -1,0 +1,1 @@
+Store scraped / downloaded data in this directory
