@@ -75,6 +75,41 @@ def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_c
     return result
 
 
+def parse_plants(file: str, plant_attributes: list[PlantAttribute], max_count=-1) -> list[Plant]:
+    result = []
+    with open(file, newline='') as csv_file:
+        csv_reader = csv.DictReader(csv_file, delimiter=',', quotechar='"')
+        next_id = 0
+        for row in csv_reader:
+            if next_id == max_count:
+                break
+
+            plant = Plant(next_id)
+
+            for plant_attribute in plant_attributes:
+                column_name = plant_attribute.attribute_name
+                string_value = row[column_name]
+
+                match plant_attribute.attribute_type:
+                    case PlantAttributeType.NUMERIC:
+                        if not string_value:
+                            value = 0
+                        else:
+                            value = float(string_value)
+                    case PlantAttributeType.BOOL:
+                        value = bool(string_value)
+                    case PlantAttributeType.COLOR:
+                        value = string_value
+                    case PlantAttributeType.CATEGORICAL:
+                        value = string_value
+
+                setattr(plant, plant_attribute.attribute_name, value)
+
+            result.append(plant)
+            next_id += 1
+    return result
+
+
 def colors():
     color_list = []
 

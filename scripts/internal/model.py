@@ -48,7 +48,7 @@ class PlantAttribute:
 
 
 class Plant:
-    __slots__ = "plant_id", "name", "blooms", "color", "color_name", "family", "height", "features"
+    __slots__ = "plant_id", "name", "blooms", "color", "family", "height", "features"
     plant_id: int
     name: str
 
@@ -63,22 +63,20 @@ class Plant:
                                               PlantAttribute("height", PlantAttributeType.NUMERIC, 'm'),
                                               PlantAttribute("color", PlantAttributeType.COLOR),
                                               PlantAttribute("family", PlantAttributeType.CATEGORICAL)]
+    other_attributes: list[PlantAttribute] = [PlantAttribute("name", PlantAttributeType.CATEGORICAL)]
 
-    def __init__(self, plant_id: int, name: str = '', blooms: bool = False, color: np.array = None, family: str = '',
+    def __init__(self, plant_id: int, name: str = '', blooms: bool = False, color: str = '', family: str = '',
                  height: float = 0.0):
-        if color is None:
-            color = np.array([0.0, 0.0, 0.0])
         self.plant_id = plant_id
         self.name = name
         self.blooms = blooms
         self.color = color
-        self.color_name = ''
         self.family = family
         self.height = height
         self.features = np.array([])
 
     def __str__(self):
-        return f"[{self.plant_id}. {self.name}, ({self.family}), blooms: {self.blooms}, height: {self.height:2.2f} m, color: {self.color_name}]"
+        return f"[{self.plant_id}. {self.name}, ({self.family}), blooms: {self.blooms}, height: {self.height:2.2f} m, color: {self.color}]"
 
 
 class UserPlant:
