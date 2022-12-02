@@ -8,34 +8,6 @@ class Test:
     height: str
 
 
-COLOR_DICT = {
-    'Black': [0.0, 0.0, 0.0],
-    'Blue': [0.0, 0.0, 255.0],
-    'Brown': [150.0, 75.0, 0.0],
-    'Dark Green': [0.0, 100.0, 0.0],
-    'Gray-Green': [94.0, 113.0, 106.0],
-    'Green': [0.0, 255.0, 0.0],
-    'Orange': [255.0, 165.0, 0.0],
-    'Purple': [128.0, 0.0, 128.0],
-    'Red': [255.0, 0.0, 0.0],
-    'White': [255.0, 255.0, 255.0],
-    'White-Gray': [235.0, 236.0, 240.0],
-    'Yellow': [255.0, 255.0, 0.0],
-    'Yellow-Green': [154.0, 205.0, 50.0],
-}
-
-
-def to_color(color_name):
-    if color_name not in COLOR_DICT:
-        result = COLOR_DICT['Black']
-    else:
-        rgb = COLOR_DICT[color_name]
-        result = np.zeros(3)
-        for i in range(3):
-            result[i] = rgb[i] / 255.0
-    return result
-
-
 def convert_unit(value: float, source_unit: str, target_unit: str):
     if source_unit == target_unit:
         return value
@@ -91,8 +63,7 @@ def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_c
                     case PlantAttributeType.BOOL:
                         value = string_value == true_name
                     case PlantAttributeType.COLOR:
-                        value = to_color(string_value)
-                        setattr(plant, plant_attribute.attribute_name + '_name', string_value)
+                        value = string_value
                     case PlantAttributeType.CATEGORICAL:
                         value = string_value
 

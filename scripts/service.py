@@ -50,6 +50,17 @@ class PlantRecommendation:
 
 class PlantRecommender:
     @staticmethod
+    def to_color(color_name):
+        if color_name not in COLOR_DICT:
+            result = COLOR_DICT['Black']
+        else:
+            rgb = COLOR_DICT[color_name]
+            result = np.zeros(3)
+            for i in range(3):
+                result[i] = rgb[i] / 255.0
+        return result
+
+    @staticmethod
     def init_features(plant_list: list[Plant], plant_attributes: list[PlantAttribute]):
         # find number of features
         number_features = 0
@@ -88,7 +99,8 @@ class PlantRecommender:
                         plant.features[feature_index] = 1 if current_value else 0
                 case PlantAttributeType.COLOR:
                     for plant in plant_list:
-                        current_value = getattr(plant, plant_attribute.attribute_name)
+                        color_string = getattr(plant, plant_attribute.attribute_name)
+                        current_value = PlantRecommender.to_color(color_string)
                         for i in range(0, 3):
                             plant.features[feature_index + i] = current_value[i]
                 case PlantAttributeType.CATEGORICAL:

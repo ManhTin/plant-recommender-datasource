@@ -3,14 +3,30 @@ from enum import Enum
 from typing import Optional
 
 
+COLOR_DICT = {
+    'Black': [0.0, 0.0, 0.0],
+    'Blue': [0.0, 0.0, 255.0],
+    'Brown': [150.0, 75.0, 0.0],
+    'Dark Green': [0.0, 100.0, 0.0],
+    'Gray-Green': [94.0, 113.0, 106.0],
+    'Green': [0.0, 255.0, 0.0],
+    'Orange': [255.0, 165.0, 0.0],
+    'Purple': [128.0, 0.0, 128.0],
+    'Red': [255.0, 0.0, 0.0],
+    'White': [255.0, 255.0, 255.0],
+    'White-Gray': [235.0, 236.0, 240.0],
+    'Yellow': [255.0, 255.0, 0.0],
+    'Yellow-Green': [154.0, 205.0, 50.0],
+}
+
+
 class Plant:
     __slots__ = "plant_id", "name", "blooms", "color", "color_name", "family", "height", "features"
     plant_id: int
     name: str
 
     blooms: bool
-    color: np.array
-    color_name: str
+    color: str
     family: str
     height: float
 
