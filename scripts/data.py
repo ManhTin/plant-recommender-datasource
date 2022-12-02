@@ -86,3 +86,19 @@ def colors():
                 color_list.append(color)
 
     print(color_list)
+
+
+def export_plants(file: str, plants: list[Plant], plant_attributes: list[PlantAttribute]):
+    with open(file, 'w', newline='') as csv_file:
+        csv_writer = csv.writer(csv_file, delimiter=',', quotechar='"')
+
+        header = []
+        for plant_attribute in plant_attributes:
+            header.append(plant_attribute.attribute_name)
+        csv_writer.writerow(header)
+
+        for plant in plants:
+            row = []
+            for plant_attribute in plant_attributes:
+                row.append(getattr(plant, plant_attribute.attribute_name))
+            csv_writer.writerow(row)

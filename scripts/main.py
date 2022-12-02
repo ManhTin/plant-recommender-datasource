@@ -52,3 +52,4 @@ if __name__ == '__main__':
     for rec in recs:
         print(rec)
     # colors()
+    export_plants('../export/plants.csv', plants, plant_attributes)
