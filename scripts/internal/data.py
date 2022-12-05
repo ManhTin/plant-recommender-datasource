@@ -114,7 +114,7 @@ def parse_plants(file: str, plant_attributes: list[PlantAttribute], max_count=-1
                         else:
                             value = float(string_value)
                     case PlantAttributeType.BOOL:
-                        value = bool(string_value)
+                        value = string_value == 'True'
                     case PlantAttributeType.COLOR:
                         value = string_value
                     case PlantAttributeType.CATEGORICAL:
