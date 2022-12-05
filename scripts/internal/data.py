@@ -2,12 +2,6 @@ from .model import *
 import csv
 
 
-class Test:
-    name: str
-    color: str
-    height: str
-
-
 def convert_unit(value: float, source_unit: str, target_unit: str):
     if source_unit == target_unit:
         return value
