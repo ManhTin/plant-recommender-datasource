@@ -48,13 +48,12 @@ def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_c
 
     with open(file, newline='') as csv_file:
         csv_reader = csv.DictReader(csv_file, delimiter=delimiter, quotechar=quote_char)
-        next_id = 0
+        current_count = 0
         for row in csv_reader:
-            if next_id == max_count:
+            if current_count == max_count:
                 break
 
-            plant = Plant(next_id)
-
+            plant = Plant()
             valid = True
             for csv_attribute in csv_attributes:
                 plant_attribute = csv_attribute.plant_attribute
@@ -89,7 +88,7 @@ def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_c
 
             if valid:
                 result.append(plant)
-                next_id += 1
+                current_count += 1
     return result
 
 
@@ -97,12 +96,12 @@ def parse_plants(file: str, plant_attributes: list[PlantAttribute], max_count=-1
     result = []
     with open(file, newline='') as csv_file:
         csv_reader = csv.DictReader(csv_file, delimiter=',', quotechar='"')
-        next_id = 0
+        current_count = 0
         for row in csv_reader:
-            if next_id == max_count:
+            if current_count == max_count:
                 break
 
-            plant = Plant(next_id)
+            plant = Plant()
 
             for plant_attribute in plant_attributes:
                 column_name = plant_attribute.attribute_name
@@ -124,7 +123,7 @@ def parse_plants(file: str, plant_attributes: list[PlantAttribute], max_count=-1
                 setattr(plant, plant_attribute.attribute_name, value)
 
             result.append(plant)
-            next_id += 1
+            current_count += 1
     return result
 
 

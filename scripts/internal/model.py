@@ -50,8 +50,7 @@ class PlantAttribute:
 
 
 class Plant:
-    __slots__ = "plant_id", "name", "palatable", "color", "family", "height", "features"
-    plant_id: int
+    __slots__ = "name", "palatable", "color", "family", "height", "features"
     name: str
 
     palatable: bool
@@ -67,9 +66,8 @@ class Plant:
                                               PlantAttribute("family", PlantAttributeType.CATEGORICAL)]
     other_attributes: list[PlantAttribute] = [PlantAttribute("name", PlantAttributeType.CATEGORICAL, unique=True)]
 
-    def __init__(self, plant_id: int, name: str = '', palatable: bool = False, color: str = '', family: str = '',
+    def __init__(self, name: str = '', palatable: bool = False, color: str = '', family: str = '',
                  height: float = 0.0):
-        self.plant_id = plant_id
         self.name = name
         self.palatable = palatable
         self.color = color
@@ -78,7 +76,7 @@ class Plant:
         self.features = np.array([])
 
     def __str__(self):
-        return f"[{self.plant_id}. {self.name}, ({self.family}), palatable: {self.palatable}, height: {self.height:2.2f} m, color: {self.color}]"
+        return f"[{self.name}, ({self.family}), palatable: {self.palatable}, height: {self.height:2.2f} m, color: {self.color}]"
 
 
 class UserPlant:
