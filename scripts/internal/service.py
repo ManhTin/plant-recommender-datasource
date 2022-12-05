@@ -61,26 +61,32 @@ class PlantRecommender:
         return result
 
     @staticmethod
-    def init_features(plant_list: list[Plant], plant_attributes: list[PlantAttribute]):
-        # find number of features
+    def update_features(new_plants: list[Plant], current_plants: list[Plant], plant_attributes: list[PlantAttribute]):
         number_features = 0
         for plant_attribute in plant_attributes:
             plant_attribute.feature_index = number_features
             number_features += PlantAttributeService.get_number_of_feature_slots(plant_attribute.attribute_type)
 
         # init feature array
-        for plant in plant_list:
+        for plant in new_plants:
             plant.features = np.zeros(number_features)
 
-        # iterate over all features
         for plant_attribute in plant_attributes:
             feature_index = plant_attribute.feature_index
 
             match plant_attribute.attribute_type:
                 case PlantAttributeType.NUMERIC:
-                    max_value = getattr(plant_list[0], plant_attribute.attribute_name)
-                    min_value = getattr(plant_list[0], plant_attribute.attribute_name)
-                    for plant in plant_list:
+                    if current_plants:
+                        max_value = plant_attribute.max_value
+                        min_value = plant_attribute.min_value
+                    else:
+                        max_value = getattr(new_plants[0], plant_attribute.attribute_name)
+                        min_value = getattr(new_plants[0], plant_attribute.attribute_name)
+
+                    old_max_value = max_value
+                    old_min_value = min_value
+
+                    for plant in new_plants:
                         current_value = getattr(plant, plant_attribute.attribute_name)
                         if current_value > max_value:
                             max_value = current_value
@@ -90,21 +96,26 @@ class PlantRecommender:
                     plant_attribute.max_value = max_value
                     plant_attribute.min_value = min_value
 
-                    for plant in plant_list:
+                    if current_plants and (old_max_value != max_value or old_min_value != min_value):
+                        for plant in current_plants:
+                            current_value = getattr(plant, plant_attribute.attribute_name)
+                            plant.features[feature_index] = (current_value - min_value) / (max_value - min_value)
+
+                    for plant in new_plants:
                         current_value = getattr(plant, plant_attribute.attribute_name)
                         plant.features[feature_index] = (current_value - min_value) / (max_value - min_value)
                 case PlantAttributeType.BOOL:
-                    for plant in plant_list:
+                    for plant in new_plants:
                         current_value = getattr(plant, plant_attribute.attribute_name)
                         plant.features[feature_index] = 1 if current_value else 0
                 case PlantAttributeType.COLOR:
-                    for plant in plant_list:
+                    for plant in new_plants:
                         color_string = getattr(plant, plant_attribute.attribute_name)
                         current_value = PlantRecommender.to_color(color_string)
                         for i in range(0, 3):
                             plant.features[feature_index + i] = current_value[i]
                 case PlantAttributeType.CATEGORICAL:
-                    for plant in plant_list:
+                    for plant in new_plants:
                         current_value = getattr(plant, plant_attribute.attribute_name)
                         index = None
                         if current_value in plant_attribute.categories:
@@ -113,6 +124,10 @@ class PlantRecommender:
                             index = len(plant_attribute.categories)
                             plant_attribute.categories.append(current_value)
                         plant.features[feature_index] = index
+
+    @staticmethod
+    def init_features(plant_list: list[Plant], plant_attributes: list[PlantAttribute]):
+        PlantRecommender.update_features(plant_list, [], plant_attributes)
 
     @staticmethod
     def recommend_plant(plants: list[Plant], plant_attributes: list[PlantAttribute], user: User,
