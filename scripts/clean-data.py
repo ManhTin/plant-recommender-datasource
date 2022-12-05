@@ -9,6 +9,8 @@ csv_attributes = [CsvAttribute('Palatable Human', plant_attributes[0]),
                   CsvAttribute('Family', plant_attributes[3]),
                   CsvAttribute('Scientific Name', PlantAttribute('name', PlantAttributeType.CATEGORICAL))]
 
-plants = parse('../data/PLANTS.txt', csv_attributes, 'Yes')
+plants = parse('../data/PLANTS.txt', csv_attributes, 'Yes', max_count=10)
+keys = extract_keys(plants, all_attributes)
+plants = parse('../data/PLANTS.txt', csv_attributes, 'Yes', max_count=12, unique_keys=keys)
 
 export_plants('../export/plants.csv', plants, all_attributes)

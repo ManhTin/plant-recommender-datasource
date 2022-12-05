@@ -11,6 +11,21 @@ def convert_unit(value: float, source_unit: str, target_unit: str):
     return value
 
 
+def extract_keys(plants: list[Plant], plant_attributes: list[PlantAttribute]) -> set:
+    keys = set()
+    unique_plant_attribute = None
+    for plant_attribute in plant_attributes:
+        if plant_attribute.unique:
+            unique_plant_attribute = plant_attribute
+            break
+
+    if unique_plant_attribute is not None:
+        for plant in plants:
+            keys.add(getattr(plant, unique_plant_attribute.attribute_name))
+
+    return keys
+
+
 class CsvAttribute:
     __slots__ = 'name', 'plant_attribute', 'optional', 'unit'
     name: str
@@ -25,9 +40,12 @@ class CsvAttribute:
         self.unit = unit
 
 
-def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_count=-1, delimiter=',',
-          quote_char='"') -> list[Plant]:
+def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_count=-1, unique_keys: set = None,
+          delimiter=',', quote_char='"') -> list[Plant]:
+    if unique_keys is None:
+        unique_keys = set()
     result = []
+
     with open(file, newline='') as csv_file:
         csv_reader = csv.DictReader(csv_file, delimiter=delimiter, quotechar=quote_char)
         next_id = 0
@@ -60,6 +78,12 @@ def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_c
                         value = string_value
                     case PlantAttributeType.CATEGORICAL:
                         value = string_value
+
+                if plant_attribute.unique and value in unique_keys:
+                    valid = False
+                    continue
+                else:
+                    unique_keys.add(value)
 
                 setattr(plant, plant_attribute.attribute_name, value)
 
