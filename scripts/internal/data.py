@@ -78,11 +78,12 @@ def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_c
                     case PlantAttributeType.CATEGORICAL:
                         value = string_value
 
-                if plant_attribute.unique and value in unique_keys:
-                    valid = False
-                    continue
-                else:
-                    unique_keys.add(value)
+                if valid and plant_attribute.unique:
+                    if value in unique_keys:
+                        valid = False
+                        continue
+                    else:
+                        unique_keys.add(value)
 
                 setattr(plant, plant_attribute.attribute_name, value)
 
