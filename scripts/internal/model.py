@@ -53,33 +53,60 @@ class PlantAttribute:
 
 
 class Plant:
-    __slots__ = "name", "palatable", "color", "family", "height", "features"
+    common_name: str
+    family_common_name: str
     name: str
 
-    palatable: bool
-    color: str
+    active_growth_period: str
+    bloom_period: str
+    drought_tolerance: str
     family: str
+    flower_color: str
+    foliage_color: str
+    foliage_porosity_summer: str
+    foliage_porosity_winter: str
+    frost_free_days: float
+    fruit_color: str
+    growth_habit: str
+    growth_rate: str
     height: float
+    lifespan: str
+    palatable: bool
+    ph_minimum: float
+    ph_maximum: float
+    toxicity: str
 
     features: np.array
 
-    plant_attributes: list[PlantAttribute] = [PlantAttribute("palatable", PlantAttributeType.BOOL),
-                                              PlantAttribute("height", PlantAttributeType.NUMERIC, 'm'),
-                                              PlantAttribute("color", PlantAttributeType.COLOR),
-                                              PlantAttribute("family", PlantAttributeType.CATEGORICAL)]
-    other_attributes: list[PlantAttribute] = [PlantAttribute("name", PlantAttributeType.CATEGORICAL, unique=True)]
+    plant_attributes: list[PlantAttribute] = [
+        PlantAttribute("active_growth_period", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("bloom_period", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("drought_tolerance", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("family", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("flower_color", PlantAttributeType.COLOR),
+        PlantAttribute("foliage_color", PlantAttributeType.COLOR),
+        PlantAttribute("foliage_porosity_summer", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("foliage_porosity_winter", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("frost_free_days", PlantAttributeType.NUMERIC),
+        PlantAttribute("fruit_color", PlantAttributeType.COLOR),
+        PlantAttribute("growth_habit", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("growth_rate", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("height", PlantAttributeType.NUMERIC, 'm'),
+        PlantAttribute("lifespan", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("palatable", PlantAttributeType.BOOL),
+        PlantAttribute("ph_minimum", PlantAttributeType.NUMERIC),
+        PlantAttribute("ph_maximum", PlantAttributeType.NUMERIC),
+        PlantAttribute("toxicity", PlantAttributeType.CATEGORICAL),
+    ]
 
-    def __init__(self, name: str = '', palatable: bool = False, color: str = '', family: str = '',
-                 height: float = 0.0):
-        self.name = name
-        self.palatable = palatable
-        self.color = color
-        self.family = family
-        self.height = height
-        self.features = np.array([])
+    other_attributes: list[PlantAttribute] = [
+        PlantAttribute("common_name", PlantAttributeType.CATEGORICAL, optional=True),
+        PlantAttribute("family_common_name", PlantAttributeType.CATEGORICAL, optional=True),
+        PlantAttribute("name", PlantAttributeType.CATEGORICAL, unique=True),
+    ]
 
     def __str__(self):
-        return f"[{self.name}, ({self.family}), palatable: {self.palatable}, height: {self.height:2.2f} m, color: {self.color}]"
+        return f"[{self.common_name}]"
 
 
 class UserPlant:
