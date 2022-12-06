@@ -30,13 +30,11 @@ class CsvAttribute:
     __slots__ = 'name', 'plant_attribute', 'optional', 'unit'
     name: str
     plant_attribute: PlantAttribute
-    optional: bool
     unit: str
 
-    def __init__(self, name, plant_attribute, optional=False, unit=''):
+    def __init__(self, name, plant_attribute, unit=''):
         self.name = name
         self.plant_attribute = plant_attribute
-        self.optional = optional
         self.unit = unit
 
 
@@ -60,7 +58,7 @@ def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_c
                 column_name = csv_attribute.name
                 string_value = row[column_name]
 
-                if not string_value and not csv_attribute.optional:
+                if not string_value and not plant_attribute.optional:
                     valid = False
                     continue
 
@@ -153,5 +151,8 @@ def export_plants(file: str, plants: list[Plant], plant_attributes: list[PlantAt
         for plant in plants:
             row = []
             for plant_attribute in plant_attributes:
-                row.append(getattr(plant, plant_attribute.attribute_name))
+                if hasattr(plant, plant_attribute.attribute_name):
+                    row.append(getattr(plant, plant_attribute.attribute_name))
+                else:
+                    row.append('')
             csv_writer.writerow(row)
