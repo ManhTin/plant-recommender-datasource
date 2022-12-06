@@ -131,7 +131,7 @@ def parse_plants(file: str, plant_attributes: list[PlantAttribute], max_count=-1
 def colors():
     color_list = []
 
-    with open('PLANTS.txt', newline='') as csv_file:
+    with open('PLANTS.csv', newline='') as csv_file:
         csv_reader = csv.DictReader(csv_file, delimiter=',', quotechar='"')
         for row in csv_reader:
             color = row['Fruit Color']
