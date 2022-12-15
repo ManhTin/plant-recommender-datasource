@@ -59,4 +59,4 @@ for path in plant_paths:
 
 print('export plant data to csv...')
 # save plant_df to csv
-plant_df.to_csv('plant_data.csv', index=False)
+plant_df.to_csv('data/how_many_plants_data.csv', index=False)
