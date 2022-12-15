@@ -6,6 +6,7 @@ BASE_URL = 'https://www.howmanyplants.com'
 LIST_PATH = '/plant-guides'
 
 # get all paths to plants
+print('load plant urls...')
 response = requests.get(BASE_URL + LIST_PATH)
 selection = parsel.Selector(response.text)
 plant_paths = selection.css('div.plant-index-grid a::attr(href)').getall()
@@ -17,6 +18,7 @@ plant_df = pd.DataFrame(columns=[
     'size', 'format', 'leaf_shape', 'image_url', 'url'])
 
 # iterate through each url and store data in dataframe
+print('iterate plant urls and parse info...')
 for path in plant_paths:
     resp = requests.get(BASE_URL + path)
     sel = parsel.Selector(resp.text)
@@ -51,5 +53,6 @@ for path in plant_paths:
     # concat plant_attr to plant_df
     plant_df = pd.concat([plant_df, pd.DataFrame(plant_attr, index=[0])])
 
+print('export plant data to csv...')
 # save plant_df to csv
 plant_df.to_csv('plant_data.csv', index=False)
