@@ -1,6 +1,7 @@
 import pandas as pd
 import parsel
 import requests
+import time
 
 BASE_URL = 'https://www.howmanyplants.com'
 LIST_PATH = '/plant-guides'
@@ -52,6 +53,9 @@ for path in plant_paths:
     plant_attr['leaf_shape'] = basic_content[7].strip()
     # concat plant_attr to plant_df
     plant_df = pd.concat([plant_df, pd.DataFrame(plant_attr, index=[0])])
+    # sleep to avoid being blocked from further requests
+    print(f"parsed data for {plant_attr['name']}")
+    time.sleep(2)
 
 print('export plant data to csv...')
 # save plant_df to csv
