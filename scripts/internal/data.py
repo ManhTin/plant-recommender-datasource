@@ -153,7 +153,7 @@ def colors():
 
 
 def export_plants(file: str, plants: list[Plant], plant_attributes: list[PlantAttribute], append=False):
-    mode = 'w' if append else 'a'
+    mode = 'a' if append else 'w'
     with open(file, mode, newline='') as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=',', quotechar='"')
 
