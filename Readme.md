@@ -17,3 +17,5 @@ Getting started
     1. Activate virtual environment of project: `conda activate plant-recommender-datasource`
     1. Install dependencies into virtual env: `pip install -r requirements.txt`
     1. Start jupyter server: `jupyter notebook`
+- Run scraper
+    1. howmanyplants.com scraper: `python scrapers/how_many_plants_scraper.py` -> exports to `data/...`
