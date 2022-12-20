@@ -55,7 +55,7 @@ class PlantAttribute:
 class Plant:
     common_name: str
     family_common_name: str
-    name: str
+    scientific_name: str
 
     active_growth_period: str
     bloom_period: str
@@ -102,11 +102,11 @@ class Plant:
     other_attributes: list[PlantAttribute] = [
         PlantAttribute("common_name", PlantAttributeType.CATEGORICAL, optional=True),
         PlantAttribute("family_common_name", PlantAttributeType.CATEGORICAL, optional=True),
-        PlantAttribute("name", PlantAttributeType.CATEGORICAL, unique=True),
+        PlantAttribute("scientific_name", PlantAttributeType.CATEGORICAL, unique=True),
     ]
 
     def __str__(self):
-        return f"[{self.common_name}]"
+        return f"[{self.scientific_name}]"
 
 
 class UserPlant:

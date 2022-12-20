@@ -5,7 +5,7 @@ import json
 
 def get_plant_by_name(plant_list, name):
     for plant in plant_list:
-        if name == plant.name:
+        if name == plant.scientific_name:
             return plant
 
 
