@@ -38,8 +38,18 @@ class CsvAttribute:
         self.unit = unit
 
 
-def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_count=-1, unique_keys: set = None,
-          delimiter=',', quote_char='"') -> list[Plant]:
+class ConstantAttribute:
+    __slots__ = 'plant_attribute', 'value'
+    plant_attribute: PlantAttribute
+    value: str
+
+    def __init__(self, plant_attribute, value):
+        self.plant_attribute = plant_attribute
+        self.value = value
+
+
+def parse(file: str, csv_attributes: list[CsvAttribute], constant_attributes: list[ConstantAttribute], true_name='True',
+          max_count=-1, unique_keys: set = None, delimiter=',', quote_char='"') -> list[Plant]:
     if unique_keys is None:
         unique_keys = set()
     result = []
@@ -86,6 +96,9 @@ def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_c
                 setattr(plant, plant_attribute.attribute_name, value)
 
             if valid:
+                for constant_attribute in constant_attributes:
+                    setattr(plant, constant_attribute.plant_attribute.attribute_name, constant_attribute.value)
+
                 result.append(plant)
                 current_count += 1
     return result

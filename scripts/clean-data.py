@@ -28,6 +28,11 @@ csv_attributes = [
     CsvAttribute('Toxicity', plant_attributes[23]),
 ]
 
-plants = parse('../data/PLANTS.csv', csv_attributes, 'Yes')
+constant_attributes = [
+    ConstantAttribute(plant_attributes[19], 'North America'),
+    ConstantAttribute(plant_attributes[24], 'Outdoor Plant'),
+]
+
+plants = parse('../data/PLANTS.csv', csv_attributes, constant_attributes, 'Yes')
 
 export_plants('../export/plants.csv', plants, all_attributes)
