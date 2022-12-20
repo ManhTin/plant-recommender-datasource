@@ -27,7 +27,7 @@ def extract_keys(plants: list[Plant], plant_attributes: list[PlantAttribute]) ->
 
 
 class CsvAttribute:
-    __slots__ = 'name', 'plant_attribute', 'optional', 'unit'
+    __slots__ = 'name', 'plant_attribute', 'unit'
     name: str
     plant_attribute: PlantAttribute
     unit: str
