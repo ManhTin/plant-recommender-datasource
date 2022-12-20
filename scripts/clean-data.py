@@ -21,16 +21,17 @@ csv_attributes = [
     CsvAttribute('Growth Habit', plant_attributes[13]),
     CsvAttribute('Growth Rate', plant_attributes[14]),
     CsvAttribute('Height, Mature (feet)', plant_attributes[15], unit='feet'),
-    CsvAttribute('Lifespan', plant_attributes[17]),
-    CsvAttribute('pH (Minimum)', plant_attributes[20]),
-    CsvAttribute('pH (Maximum)', plant_attributes[21]),
+    CsvAttribute('Shape and Orientation', plant_attributes[17]),
+    CsvAttribute('Lifespan', plant_attributes[18]),
+    CsvAttribute('pH (Minimum)', plant_attributes[21]),
+    CsvAttribute('pH (Maximum)', plant_attributes[22]),
     CsvAttribute('Scientific Name', other_attributes[3]),
-    CsvAttribute('Toxicity', plant_attributes[23]),
+    CsvAttribute('Toxicity', plant_attributes[24]),
 ]
 
 constant_attributes = [
-    ConstantAttribute(plant_attributes[19], 'North America'),
-    ConstantAttribute(plant_attributes[24], 'Outdoor Plant'),
+    ConstantAttribute(plant_attributes[20], 'North America'),
+    ConstantAttribute(plant_attributes[25], 'Outdoor Plant'),
 ]
 
 plants = parse('../data/PLANTS.csv', csv_attributes, constant_attributes, 'Yes')

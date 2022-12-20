@@ -97,6 +97,7 @@ class Plant:
         PlantAttribute("growth_rate", PlantAttributeType.CATEGORICAL),
         PlantAttribute("height", PlantAttributeType.NUMERIC, 'm'),
         PlantAttribute("humidity", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("leaf_shape", PlantAttributeType.CATEGORICAL),
         PlantAttribute("lifespan", PlantAttributeType.CATEGORICAL),
         PlantAttribute("light", PlantAttributeType.CATEGORICAL),
         PlantAttribute("origin", PlantAttributeType.CATEGORICAL),
