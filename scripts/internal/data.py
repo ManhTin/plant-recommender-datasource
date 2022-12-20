@@ -157,10 +157,11 @@ def export_plants(file: str, plants: list[Plant], plant_attributes: list[PlantAt
     with open(file, mode, newline='') as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=',', quotechar='"')
 
-        header = []
-        for plant_attribute in plant_attributes:
-            header.append(plant_attribute.attribute_name)
-        csv_writer.writerow(header)
+        if not append:
+            header = []
+            for plant_attribute in plant_attributes:
+                header.append(plant_attribute.attribute_name)
+            csv_writer.writerow(header)
 
         for plant in plants:
             row = []
