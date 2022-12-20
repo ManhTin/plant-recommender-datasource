@@ -60,6 +60,7 @@ class Plant:
     active_growth_period: str
     bloom_period: str
     drought_tolerance: str
+    duration: str
     family: str
     flower_color: str
     foliage_color: str
@@ -71,17 +72,20 @@ class Plant:
     growth_rate: str
     height: float
     lifespan: str
-    palatable: bool
     ph_minimum: float
     ph_maximum: float
     toxicity: str
+    type: str
 
     features: np.array
 
     plant_attributes: list[PlantAttribute] = [
         PlantAttribute("active_growth_period", PlantAttributeType.CATEGORICAL),
         PlantAttribute("bloom_period", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("climate", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("difficulty", PlantAttributeType.CATEGORICAL),
         PlantAttribute("drought_tolerance", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("duration", PlantAttributeType.CATEGORICAL),
         PlantAttribute("family", PlantAttributeType.CATEGORICAL),
         PlantAttribute("flower_color", PlantAttributeType.COLOR),
         PlantAttribute("foliage_color", PlantAttributeType.COLOR),
@@ -92,16 +96,21 @@ class Plant:
         PlantAttribute("growth_habit", PlantAttributeType.CATEGORICAL),
         PlantAttribute("growth_rate", PlantAttributeType.CATEGORICAL),
         PlantAttribute("height", PlantAttributeType.NUMERIC, 'm'),
+        PlantAttribute("humidity", PlantAttributeType.CATEGORICAL),
         PlantAttribute("lifespan", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("palatable", PlantAttributeType.BOOL),
+        PlantAttribute("light", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("origin", PlantAttributeType.CATEGORICAL),
         PlantAttribute("ph_minimum", PlantAttributeType.NUMERIC),
         PlantAttribute("ph_maximum", PlantAttributeType.NUMERIC),
+        PlantAttribute("temperature", PlantAttributeType.CATEGORICAL),
         PlantAttribute("toxicity", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("type", PlantAttributeType.CATEGORICAL),
     ]
 
     other_attributes: list[PlantAttribute] = [
         PlantAttribute("common_name", PlantAttributeType.CATEGORICAL, optional=True),
         PlantAttribute("family_common_name", PlantAttributeType.CATEGORICAL, optional=True),
+        PlantAttribute("image", PlantAttributeType.CATEGORICAL, optional=True),
         PlantAttribute("scientific_name", PlantAttributeType.CATEGORICAL, unique=True),
     ]
 
