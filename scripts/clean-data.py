@@ -4,6 +4,8 @@ plant_attributes = Plant.plant_attributes
 other_attributes = Plant.other_attributes
 all_attributes = plant_attributes + Plant.other_attributes
 
+# PLANTS.cvs
+
 csv_attributes = [
     CsvAttribute('Active Growth Period', plant_attributes[0]),
     CsvAttribute('Bloom Period', plant_attributes[1]),
@@ -37,3 +39,30 @@ constant_attributes = [
 plants = parse('../data/PLANTS.csv', csv_attributes, constant_attributes, 'Yes')
 
 export_plants('../export/plants.csv', plants, all_attributes)
+
+# how_many_plants_data.cvs
+
+csv_attributes = [
+    CsvAttribute('name', other_attributes[0]),
+    CsvAttribute('official_name', other_attributes[3]),
+    CsvAttribute('origins', plant_attributes[20]),
+    CsvAttribute('climate', plant_attributes[2]),
+    CsvAttribute('difficulty', plant_attributes[3]),
+    CsvAttribute('water', plant_attributes[4]),
+    CsvAttribute('light', plant_attributes[19]),
+    CsvAttribute('humidity', plant_attributes[16]),
+    CsvAttribute('temperature', plant_attributes[23]),
+    CsvAttribute('toxicity', plant_attributes[24]),
+    # TODO CsvAttribute('height', plant_attributes[15]),
+    CsvAttribute('format', plant_attributes[13]),
+    CsvAttribute('leaf_shape', plant_attributes[17]),
+    CsvAttribute('image_url', other_attributes[2]),
+]
+
+constant_attributes = [
+    ConstantAttribute(plant_attributes[25], 'Indoor Plant'),
+]
+
+plants = parse('../data/how_many_plants_data.csv', csv_attributes, constant_attributes, 'Yes')
+
+export_plants('../export/plants.csv', plants, all_attributes, append=True)

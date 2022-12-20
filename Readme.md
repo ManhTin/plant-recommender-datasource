@@ -3,7 +3,7 @@ Datasourcing for the Homeplant Recommender System project in Data Integration 22
 
 ## Cleaned Data
 
-The cleaned dataset contains 1609 indoor and outdoor plants with following attributes:
+The cleaned dataset contains 1666 indoor and outdoor plants with following attributes:
 
 | Attribute               | Indoor | Outdoor |
 |-------------------------|--------|---------|
