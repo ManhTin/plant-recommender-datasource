@@ -152,8 +152,9 @@ def colors():
     print(color_list)
 
 
-def export_plants(file: str, plants: list[Plant], plant_attributes: list[PlantAttribute]):
-    with open(file, 'w', newline='') as csv_file:
+def export_plants(file: str, plants: list[Plant], plant_attributes: list[PlantAttribute], append=False):
+    mode = 'w' if append else 'a'
+    with open(file, mode, newline='') as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=',', quotechar='"')
 
         header = []
