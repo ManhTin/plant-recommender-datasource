@@ -6,8 +6,20 @@ all_attributes = plant_attributes + Plant.other_attributes
 
 # PLANTS.cvs
 
+
+def and_to_comma(value: str) -> str:
+    return value.replace(' and ', ',').replace(' & ', ',').replace(', ', ',')
+
+
+def active_growth_period_mapping(agp: str) -> str:
+    if agp == 'Year Round':
+        return 'Spring,Summer,Fall,Winter'
+    else:
+        return and_to_comma(agp)
+
+
 csv_attributes = [
-    CsvAttribute('Active Growth Period', plant_attributes[0]),
+    CsvAttribute('Active Growth Period', plant_attributes[0], mapping_function=active_growth_period_mapping),
     CsvAttribute('Bloom Period', plant_attributes[1]),
     CsvAttribute('Common Name', other_attributes[0]),
     CsvAttribute('Drought Tolerance', plant_attributes[4]),
@@ -20,7 +32,7 @@ csv_attributes = [
     CsvAttribute('Foliage Porosity Winter', plant_attributes[10]),
     CsvAttribute('Frost Free Days, Minimum', plant_attributes[11]),
     CsvAttribute('Fruit Color', plant_attributes[12]),
-    CsvAttribute('Growth Habit', plant_attributes[13]),
+    CsvAttribute('Growth Habit', plant_attributes[13], mapping_function=and_to_comma),
     CsvAttribute('Growth Rate', plant_attributes[14]),
     CsvAttribute('Height, Mature (feet)', plant_attributes[15], unit='feet'),
     CsvAttribute('Shape and Orientation', plant_attributes[17]),
@@ -61,11 +73,31 @@ def drought_tolerance_mapping(water):
     return drought_tolerance_dict[water]
 
 
+def climate_mapping(climate: str) -> str:
+    return and_to_comma(climate).replace('aird', 'arid').replace(' region', '')
+
+
+def origin_mapping(origin: str) -> str:
+    values = origin.split(', ')
+    for value in values:
+        words = value.split(' ')
+        if '&' in words:
+            values.remove(value)
+            if len(words) == 4:
+                values.append(f'{words[0]} {words[3]}')
+                values.append(f'{words[2]} {words[3]}')
+            else:
+                values.append(and_to_comma(value))
+    for i in range(len(values)):
+        values[i] = values[i].replace('ern ', ' ')
+    return ','.join(values)
+
+
 csv_attributes = [
     CsvAttribute('name', other_attributes[0]),
     CsvAttribute('official_name', other_attributes[3]),
-    CsvAttribute('origins', plant_attributes[20]),
-    CsvAttribute('climate', plant_attributes[2]),
+    CsvAttribute('origins', plant_attributes[20], mapping_function=origin_mapping),
+    CsvAttribute('climate', plant_attributes[2], mapping_function=climate_mapping),
     CsvAttribute('difficulty', plant_attributes[3]),
     CsvAttribute('water', plant_attributes[4], mapping_function=drought_tolerance_mapping),
     CsvAttribute('light', plant_attributes[19]),
