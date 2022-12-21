@@ -29,15 +29,20 @@ class PlantAttributeType(Enum):
 
 class PlantAttribute:
     __slots__ = "feature_index", "attribute_name", "attribute_type", "unique", "max_value", "min_value", "optional", "unit", "categories"
-    feature_index: int
+    # general
     attribute_name: str
     attribute_type: PlantAttributeType
-    max_value: float
-    min_value: float
+
+    # used for parsing
     optional: bool
     unique: bool
     unit: str
+
+    # used for recommendations
     categories: list[str]
+    feature_index: int
+    max_value: float
+    min_value: float
 
     def __init__(self, attribute_name: str, attribute_type: PlantAttributeType, unit: str = '', unique: bool = False,
                  optional: bool = False):
