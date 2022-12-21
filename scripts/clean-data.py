@@ -52,13 +52,22 @@ def toxicity_mapping(toxicity):
     return toxicity_dict[toxicity]
 
 
+def drought_tolerance_mapping(water):
+    drought_tolerance_dict = {
+        'Keep soil just moist, but not soggy.': "None",
+        'Allow top inches of soil to dry between waterings.': "Low",
+        'Allow half of soil to dry out before watering again.': "Medium"
+    }
+    return drought_tolerance_dict[water]
+
+
 csv_attributes = [
     CsvAttribute('name', other_attributes[0]),
     CsvAttribute('official_name', other_attributes[3]),
     CsvAttribute('origins', plant_attributes[20]),
     CsvAttribute('climate', plant_attributes[2]),
     CsvAttribute('difficulty', plant_attributes[3]),
-    CsvAttribute('water', plant_attributes[4]),
+    CsvAttribute('water', plant_attributes[4], mapping_function=drought_tolerance_mapping),
     CsvAttribute('light', plant_attributes[19]),
     CsvAttribute('humidity', plant_attributes[16]),
     CsvAttribute('temperature', plant_attributes[23]),
