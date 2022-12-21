@@ -1,4 +1,5 @@
 from .model import *
+from collections.abc import Callable
 import csv
 
 
@@ -27,12 +28,14 @@ def extract_keys(plants: list[Plant], plant_attributes: list[PlantAttribute]) ->
 
 
 class CsvAttribute:
-    __slots__ = 'name', 'plant_attribute', 'unit'
+    __slots__ = 'mapping_function', 'name', 'plant_attribute', 'unit'
+    mapping_function: Optional[Callable[[str], str]]
     name: str
     plant_attribute: PlantAttribute
     unit: str
 
-    def __init__(self, name, plant_attribute, unit=''):
+    def __init__(self, name, plant_attribute, unit='', mapping_function=None):
+        self.mapping_function = mapping_function
         self.name = name
         self.plant_attribute = plant_attribute
         self.unit = unit
@@ -85,6 +88,10 @@ def parse(file: str, csv_attributes: list[CsvAttribute], constant_attributes: li
                         value = string_value
                     case PlantAttributeType.CATEGORICAL:
                         value = string_value
+                        if csv_attribute.mapping_function is None:
+                            value = string_value
+                        else:
+                            value = csv_attribute.mapping_function(string_value)
 
                 if valid and plant_attribute.unique:
                     if value in unique_keys:
