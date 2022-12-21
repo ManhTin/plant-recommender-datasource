@@ -139,6 +139,13 @@ def parse_plants(file: str, plant_attributes: list[PlantAttribute], max_count=-1
     return result
 
 
+def get_value_set(plants: list[Plant], plant_attribute: PlantAttribute):
+    value_set = set()
+    for plant in plants:
+        value_set.add(getattr(plant, plant_attribute.attribute_name))
+    return value_set
+
+
 def colors():
     color_list = []
 
