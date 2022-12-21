@@ -42,6 +42,16 @@ export_plants('../export/plants.csv', plants, all_attributes)
 
 # how_many_plants_data.cvs
 
+
+def toxicity_mapping(toxicity):
+    toxicity_dict = {
+        'Non-toxic. Completely pet safe!': "None",
+        'Highly toxic to humans and pets if ingested.': "Moderate",
+        'Mildly toxic to humans and pets if ingested.': "Severe"
+    }
+    return toxicity_dict[toxicity]
+
+
 csv_attributes = [
     CsvAttribute('name', other_attributes[0]),
     CsvAttribute('official_name', other_attributes[3]),
@@ -52,7 +62,7 @@ csv_attributes = [
     CsvAttribute('light', plant_attributes[19]),
     CsvAttribute('humidity', plant_attributes[16]),
     CsvAttribute('temperature', plant_attributes[23]),
-    CsvAttribute('toxicity', plant_attributes[24]),
+    CsvAttribute('toxicity', plant_attributes[24], mapping_function=toxicity_mapping),
     # TODO CsvAttribute('height', plant_attributes[15]),
     CsvAttribute('format', plant_attributes[13]),
     CsvAttribute('leaf_shape', plant_attributes[17]),
