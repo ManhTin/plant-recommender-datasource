@@ -100,7 +100,7 @@ class Plant:
         PlantAttribute("fruit_color", PlantAttributeType.COLOR),
         PlantAttribute("growth_habit", PlantAttributeType.CATEGORICAL),
         PlantAttribute("growth_rate", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("height", PlantAttributeType.NUMERIC, 'm'),
+        PlantAttribute("height", PlantAttributeType.NUMERIC, 'm', optional=True),
         PlantAttribute("humidity", PlantAttributeType.CATEGORICAL),
         PlantAttribute("leaf_shape", PlantAttributeType.CATEGORICAL),
         PlantAttribute("lifespan", PlantAttributeType.CATEGORICAL),
@@ -111,6 +111,7 @@ class Plant:
         PlantAttribute("temperature", PlantAttributeType.CATEGORICAL),
         PlantAttribute("toxicity", PlantAttributeType.CATEGORICAL),
         PlantAttribute("type", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("width", PlantAttributeType.NUMERIC, 'm', optional=True),
     ]
 
     other_attributes: list[PlantAttribute] = [

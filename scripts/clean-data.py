@@ -77,6 +77,13 @@ def climate_mapping(climate: str) -> str:
     return and_to_comma(climate).replace('aird', 'arid').replace(' region', '')
 
 
+def height_width_mapping(number: str) -> str:
+    if number:
+        return number.split('-')[-1]
+    else:
+        return number
+
+
 def humidity_mapping(humidity: str) -> str:
     return humidity.replace('Ã¢Â€Â”', '. ')
 
@@ -118,10 +125,11 @@ csv_attributes = [
     CsvAttribute('humidity', plant_attributes[16], mapping_function=humidity_mapping),
     CsvAttribute('temperature', plant_attributes[23]),
     CsvAttribute('toxicity', plant_attributes[24], mapping_function=toxicity_mapping),
-    # TODO CsvAttribute('height', plant_attributes[15]),
+    CsvAttribute('height', plant_attributes[15], mapping_function=height_width_mapping, unit='feet'),
     CsvAttribute('format', plant_attributes[13]),
     CsvAttribute('leaf_shape', plant_attributes[17]),
     CsvAttribute('image_url', other_attributes[2]),
+    CsvAttribute('width', plant_attributes[26], mapping_function=height_width_mapping, unit='feet'),
 ]
 
 constant_attributes = [
