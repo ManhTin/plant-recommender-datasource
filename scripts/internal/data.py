@@ -88,7 +88,9 @@ def parse(file: str, csv_attributes: list[CsvAttribute], constant_attributes: li
                     valid = False
                     continue
 
-                value = None
+                if csv_attribute.mapping_function is not None:
+                    string_value = csv_attribute.mapping_function(string_value)
+
                 match plant_attribute.attribute_type:
                     case PlantAttributeType.NUMERIC:
                         if not string_value:
@@ -101,10 +103,6 @@ def parse(file: str, csv_attributes: list[CsvAttribute], constant_attributes: li
                         value = string_value
                     case PlantAttributeType.CATEGORICAL:
                         value = string_value
-                        if csv_attribute.mapping_function is None:
-                            value = string_value
-                        else:
-                            value = csv_attribute.mapping_function(string_value)
 
                 if valid and plant_attribute.unique:
                     if value in unique_keys:
