@@ -51,8 +51,21 @@ class ConstantAttribute:
         self.value = value
 
 
-def parse(file: str, csv_attributes: list[CsvAttribute], constant_attributes: list[ConstantAttribute], true_name='True',
-          max_count=-1, unique_keys: set = None, delimiter=',', quote_char='"') -> list[Plant]:
+class DerivedAttribute:
+    __slots__ = 'plant_attribute', 'name', 'mapping'
+    plant_attribute: PlantAttribute
+    name: str
+    mapping: Callable[[str], any]
+
+    def __init__(self, name, plant_attribute, mapping):
+        self.name = name
+        self.plant_attribute = plant_attribute
+        self.mapping = mapping
+
+
+def parse(file: str, csv_attributes: list[CsvAttribute], constant_attributes: list[ConstantAttribute],
+          derived_attributes: list[DerivedAttribute], true_name='True', max_count=-1, unique_keys: set = None,
+          delimiter=',', quote_char='"') -> list[Plant]:
     if unique_keys is None:
         unique_keys = set()
     result = []
@@ -101,6 +114,11 @@ def parse(file: str, csv_attributes: list[CsvAttribute], constant_attributes: li
                         unique_keys.add(value)
 
                 setattr(plant, plant_attribute.attribute_name, value)
+
+            for derived_attribute in derived_attributes:
+                string_value = row[derived_attribute.name]
+                setattr(plant, derived_attribute.plant_attribute.attribute_name,
+                        derived_attribute.mapping(string_value))
 
             if valid:
                 for constant_attribute in constant_attributes:

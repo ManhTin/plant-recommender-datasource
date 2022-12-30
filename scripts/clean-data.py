@@ -48,7 +48,7 @@ constant_attributes = [
     ConstantAttribute(plant_attributes[25], 'Outdoor Plant'),
 ]
 
-plants = parse('../data/PLANTS.csv', csv_attributes, constant_attributes, 'Yes')
+plants = parse('../data/PLANTS.csv', csv_attributes, constant_attributes, [], 'Yes')
 
 export_plants('../export/plants.csv', plants, all_attributes)
 
@@ -79,6 +79,16 @@ def climate_mapping(climate: str) -> str:
 
 def humidity_mapping(humidity: str) -> str:
     return humidity.replace('Ã¢Â€Â”', '. ')
+
+
+def foliage_color_mapping(leaf_shape: str) -> str:
+    color_list = ['Bright Green', 'Deep Green', 'Two-toned Green', 'Vivid Green', 'Glossy emerald Green',
+                  'Brilliant Green', 'Glossy dark Green', 'Vibrant Green', 'Gray-Green', 'Plump Green',
+                  'Plump vibrant Green', 'Olive Green', 'Dark Green', 'Green']
+    for color in color_list:
+        if color.lower() in leaf_shape.lower().replace('grey', 'gray'):
+            return color
+    return ''
 
 
 def origin_mapping(origin: str) -> str:
@@ -118,6 +128,10 @@ constant_attributes = [
     ConstantAttribute(plant_attributes[25], 'Indoor Plant'),
 ]
 
-plants = parse('../data/how_many_plants_data.csv', csv_attributes, constant_attributes, 'Yes')
+derived_attributes = [
+    DerivedAttribute('leaf_shape', plant_attributes[8], foliage_color_mapping)
+]
+
+plants = parse('../data/how_many_plants_data.csv', csv_attributes, constant_attributes, derived_attributes, 'Yes')
 
 export_plants('../export/plants.csv', plants, all_attributes, append=True)
