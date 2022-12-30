@@ -77,6 +77,10 @@ def climate_mapping(climate: str) -> str:
     return and_to_comma(climate).replace('aird', 'arid').replace(' region', '')
 
 
+def humidity_mapping(humidity: str) -> str:
+    return humidity.replace('Ã¢Â€Â”', '. ')
+
+
 def origin_mapping(origin: str) -> str:
     values = origin.split(', ')
     for value in values:
@@ -101,7 +105,7 @@ csv_attributes = [
     CsvAttribute('difficulty', plant_attributes[3]),
     CsvAttribute('water', plant_attributes[4], mapping_function=drought_tolerance_mapping),
     CsvAttribute('light', plant_attributes[19]),
-    CsvAttribute('humidity', plant_attributes[16]),
+    CsvAttribute('humidity', plant_attributes[16], mapping_function=humidity_mapping),
     CsvAttribute('temperature', plant_attributes[23]),
     CsvAttribute('toxicity', plant_attributes[24], mapping_function=toxicity_mapping),
     # TODO CsvAttribute('height', plant_attributes[15]),
