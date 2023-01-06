@@ -1,6 +1,11 @@
 # Plant Recommender App
 Datasourcing for the Homeplant Recommender System project in Data Integration 22/23 at WWU Münster
 
+## Data Sources
+
+- https://plants.usda.gov/home for outdoor plants
+- https://howmanyplants.com/ for indoor plants
+
 ## Cleaned Data
 
 The cleaned dataset contains 1666 indoor and outdoor plants with following attributes:
