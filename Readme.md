@@ -17,7 +17,7 @@ The cleaned dataset contains 1666 indoor and outdoor plants with following attri
 | family                  | -      | x       |
 | family_common_name      | -      | x       |
 | flower_color            | -      | x       |
-| foliage_color           | -      | x       |
+| foliage_color           | x      | x       |
 | foliage_porosity_summer | -      | x       |
 | foliage_porosity_winter | -      | x       |
 | frost_free_days         | -      | x       |
@@ -37,6 +37,7 @@ The cleaned dataset contains 1666 indoor and outdoor plants with following attri
 | temperature             | x      | -       |
 | toxicity                | x      | x       |
 | type                    | x      | x       |
+| width                   | x      | -       |
 
 ## Installation and Setup
 
