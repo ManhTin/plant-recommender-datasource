@@ -162,11 +162,32 @@ def parse_plants(file: str, plant_attributes: list[PlantAttribute], max_count=-1
     return result
 
 
-def get_value_set(plants: list[Plant], plant_attribute: PlantAttribute):
-    value_set = set()
-    for plant in plants:
-        value_set.add(getattr(plant, plant_attribute.attribute_name))
-    return value_set
+def get_common_terms(plants: list[Plant], plant_attribute: PlantAttribute, word_count: int = 1) -> dict[str, int]:
+    common_terms = {}
+    if word_count < 1:
+        for plant in plants:
+            value = getattr(plant, plant_attribute.attribute_name)
+            if value not in common_terms:
+                common_terms[value] = 1
+            else:
+                common_terms[value] += 1
+    else:
+        filter_list = ['a', 'an', 'and', 'in', 'with']
+        for plant in plants:
+            value = getattr(plant, plant_attribute.attribute_name)
+            word_list_filtered = []
+            for word in value.split(' '):
+                word_formatted = word.lower().replace(',', '').replace('.', '')
+                if word_formatted not in filter_list:
+                    word_list_filtered.append(word_formatted)
+            if len(word_list_filtered) >= word_count:
+                for index in range(0, len(word_list_filtered) - word_count + 1):
+                    current_term = ' '.join(word_list_filtered[index:index + word_count])
+                    if current_term not in common_terms:
+                        common_terms[current_term] = 1
+                    else:
+                        common_terms[current_term] += 1
+    return common_terms
 
 
 def colors():
