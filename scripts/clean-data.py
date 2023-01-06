@@ -114,6 +114,29 @@ def origin_mapping(origin: str) -> str:
     return ','.join(values)
 
 
+def contains_mapping_inner(input_value: str, output_list: list[str], entry: list[str]):
+    for value in entry:
+        if value in input_value:
+            output_list.append(entry[0])
+            return
+
+
+def contains_mapping(attribute_name: str, entry_list: list[list[str]], input_value: str) -> str:
+    output_list = []
+    input_value_formatted = input_value.lower()
+    for entry in entry_list:
+        contains_mapping_inner(input_value_formatted, output_list, entry)
+    if len(output_list) == 0:
+        print(f'No matching category for attribute "{attribute_name}" and value "{input_value}"')
+    return ','.join(output_list)
+
+
+def format_mapping(format_input: str) -> str:
+    format_list = [['clusters'], ['leaves'], ['stems', 'stalks', 'stem', 'trunk'], ['tendrils'],
+                   ['tree-like', 'tree-form'], ['vines']]
+    return contains_mapping('format', format_list, format_input)
+
+
 csv_attributes = [
     CsvAttribute('name', other_attributes[0]),
     CsvAttribute('official_name', other_attributes[3]),
@@ -126,8 +149,8 @@ csv_attributes = [
     CsvAttribute('temperature', plant_attributes[23]),
     CsvAttribute('toxicity', plant_attributes[24], mapping_function=toxicity_mapping),
     CsvAttribute('height', plant_attributes[15], mapping_function=height_width_mapping, unit='feet'),
-    CsvAttribute('format', plant_attributes[13]),
     CsvAttribute('leaf_shape', plant_attributes[17]),
+    CsvAttribute('format', plant_attributes[13], mapping_function=format_mapping),
     CsvAttribute('image_url', other_attributes[2]),
     CsvAttribute('width', plant_attributes[26], mapping_function=height_width_mapping, unit='feet'),
 ]
