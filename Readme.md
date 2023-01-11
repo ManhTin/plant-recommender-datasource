@@ -5,10 +5,11 @@ Datasourcing for the Homeplant Recommender System project in Data Integration 22
 
 - https://plants.usda.gov/home for outdoor plants
 - https://howmanyplants.com/ for indoor plants
+- https://nobleapps.noble.org/plantimagegallery/ for pictures of outdoor plants
 
 ## Cleaned Data
 
-The cleaned dataset contains 1666 indoor and outdoor plants with following attributes:
+The cleaned dataset contains 1682 indoor and outdoor plants with following attributes:
 
 | Attribute               | Indoor | Outdoor |
 |-------------------------|--------|---------|
@@ -31,7 +32,7 @@ The cleaned dataset contains 1666 indoor and outdoor plants with following attri
 | growth_rate             | -      | x       |
 | height                  | x      | x       |
 | humidity                | x      | -       |
-| image                   | x      | -       |
+| image                   | x      | ~       |
 | leaf_shape              | x      | x       |
 | lifespan                | -      | x       |
 | light                   | x      | -       |
