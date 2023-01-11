@@ -22,7 +22,7 @@ for plant_type, plant_type_id in PLANT_TYPES.items():
     index_selection = parsel.Selector(index_response.read())
     link_list = index_selection.xpath('//table[@id="ContentPlaceHolder1_tblIndex"]//a/@href').getall()
     print(link_list)
-    for link in link_list[0:0]:
+    for link in link_list[0:10]:
         time.sleep(2)
         plant_attr = dict()
         plant_response = requests.get(BASE_URL + link)

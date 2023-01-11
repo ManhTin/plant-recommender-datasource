@@ -127,6 +127,47 @@ def parse(file: str, csv_attributes: list[CsvAttribute], constant_attributes: li
     return result
 
 
+def parse_and_merge(file: str, csv_attributes: list[CsvAttribute], plant_list: list[Plant], true_name='True',
+                    delimiter=',', quote_char='"') -> list[Plant]:
+    with open(file, newline='') as csv_file:
+        csv_reader = csv.DictReader(csv_file, delimiter=delimiter, quotechar=quote_char)
+        for row in csv_reader:
+            scientific_name = row['scientific_name']
+            plant = None
+            for p in plant_list:
+                if p.scientific_name == scientific_name:
+                    plant = p
+                    break
+
+            if plant is None:
+                print(f'No matching plant found for {scientific_name}')
+                continue
+
+            for csv_attribute in csv_attributes:
+                plant_attribute = csv_attribute.plant_attribute
+                column_name = csv_attribute.name
+                string_value = row[column_name]
+
+                if csv_attribute.mapping_function is not None:
+                    string_value = csv_attribute.mapping_function(string_value)
+
+                match plant_attribute.attribute_type:
+                    case PlantAttributeType.NUMERIC:
+                        if not string_value:
+                            value = 0
+                        else:
+                            value = convert_unit(float(string_value), csv_attribute.unit, plant_attribute.unit)
+                    case PlantAttributeType.BOOL:
+                        value = string_value == true_name
+                    case PlantAttributeType.COLOR:
+                        value = string_value
+                    case PlantAttributeType.CATEGORICAL:
+                        value = string_value
+
+                setattr(plant, plant_attribute.attribute_name, value)
+    return plant_list
+
+
 def parse_plants(file: str, plant_attributes: list[PlantAttribute], max_count=-1) -> list[Plant]:
     result = []
     with open(file, newline='') as csv_file:
