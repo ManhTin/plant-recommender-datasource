@@ -1,4 +1,5 @@
 from .model import *
+from collections.abc import Callable
 import csv
 
 
@@ -27,18 +28,43 @@ def extract_keys(plants: list[Plant], plant_attributes: list[PlantAttribute]) ->
 
 
 class CsvAttribute:
-    __slots__ = 'name', 'plant_attribute', 'optional', 'unit'
+    __slots__ = 'mapping_function', 'name', 'plant_attribute', 'unit'
+    mapping_function: Optional[Callable[[str], str]]
     name: str
     plant_attribute: PlantAttribute
     unit: str
 
-    def __init__(self, name, plant_attribute, unit=''):
+    def __init__(self, name, plant_attribute, unit='', mapping_function=None):
+        self.mapping_function = mapping_function
         self.name = name
         self.plant_attribute = plant_attribute
         self.unit = unit
 
 
-def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_count=-1, unique_keys: set = None,
+class ConstantAttribute:
+    __slots__ = 'plant_attribute', 'value'
+    plant_attribute: PlantAttribute
+    value: str
+
+    def __init__(self, plant_attribute, value):
+        self.plant_attribute = plant_attribute
+        self.value = value
+
+
+class DerivedAttribute:
+    __slots__ = 'plant_attribute', 'name', 'mapping'
+    plant_attribute: PlantAttribute
+    name: str
+    mapping: Callable[[str], any]
+
+    def __init__(self, name, plant_attribute, mapping):
+        self.name = name
+        self.plant_attribute = plant_attribute
+        self.mapping = mapping
+
+
+def parse(file: str, csv_attributes: list[CsvAttribute], constant_attributes: list[ConstantAttribute],
+          derived_attributes: list[DerivedAttribute], true_name='True', max_count=-1, unique_keys: set = None,
           delimiter=',', quote_char='"') -> list[Plant]:
     if unique_keys is None:
         unique_keys = set()
@@ -62,7 +88,9 @@ def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_c
                     valid = False
                     continue
 
-                value = None
+                if csv_attribute.mapping_function is not None:
+                    string_value = csv_attribute.mapping_function(string_value)
+
                 match plant_attribute.attribute_type:
                     case PlantAttributeType.NUMERIC:
                         if not string_value:
@@ -85,7 +113,15 @@ def parse(file: str, csv_attributes: list[CsvAttribute], true_name='True', max_c
 
                 setattr(plant, plant_attribute.attribute_name, value)
 
+            for derived_attribute in derived_attributes:
+                string_value = row[derived_attribute.name]
+                setattr(plant, derived_attribute.plant_attribute.attribute_name,
+                        derived_attribute.mapping(string_value))
+
             if valid:
+                for constant_attribute in constant_attributes:
+                    setattr(plant, constant_attribute.plant_attribute.attribute_name, constant_attribute.value)
+
                 result.append(plant)
                 current_count += 1
     return result
@@ -126,6 +162,34 @@ def parse_plants(file: str, plant_attributes: list[PlantAttribute], max_count=-1
     return result
 
 
+def get_common_terms(plants: list[Plant], plant_attribute: PlantAttribute, word_count: int = 1) -> dict[str, int]:
+    common_terms = {}
+    if word_count < 1:
+        for plant in plants:
+            value = getattr(plant, plant_attribute.attribute_name)
+            if value not in common_terms:
+                common_terms[value] = 1
+            else:
+                common_terms[value] += 1
+    else:
+        filter_list = ['a', 'an', 'and', 'in', 'with']
+        for plant in plants:
+            value = getattr(plant, plant_attribute.attribute_name)
+            word_list_filtered = []
+            for word in value.split(' '):
+                word_formatted = word.lower().replace(',', '').replace('.', '')
+                if word_formatted not in filter_list:
+                    word_list_filtered.append(word_formatted)
+            if len(word_list_filtered) >= word_count:
+                for index in range(0, len(word_list_filtered) - word_count + 1):
+                    current_term = ' '.join(word_list_filtered[index:index + word_count])
+                    if current_term not in common_terms:
+                        common_terms[current_term] = 1
+                    else:
+                        common_terms[current_term] += 1
+    return common_terms
+
+
 def colors():
     color_list = []
 
@@ -139,14 +203,16 @@ def colors():
     print(color_list)
 
 
-def export_plants(file: str, plants: list[Plant], plant_attributes: list[PlantAttribute]):
-    with open(file, 'w', newline='') as csv_file:
+def export_plants(file: str, plants: list[Plant], plant_attributes: list[PlantAttribute], append=False):
+    mode = 'a' if append else 'w'
+    with open(file, mode, newline='') as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=',', quotechar='"')
 
-        header = []
-        for plant_attribute in plant_attributes:
-            header.append(plant_attribute.attribute_name)
-        csv_writer.writerow(header)
+        if not append:
+            header = []
+            for plant_attribute in plant_attributes:
+                header.append(plant_attribute.attribute_name)
+            csv_writer.writerow(header)
 
         for plant in plants:
             row = []

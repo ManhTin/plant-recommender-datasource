@@ -29,15 +29,20 @@ class PlantAttributeType(Enum):
 
 class PlantAttribute:
     __slots__ = "feature_index", "attribute_name", "attribute_type", "unique", "max_value", "min_value", "optional", "unit", "categories"
-    feature_index: int
+    # general
     attribute_name: str
     attribute_type: PlantAttributeType
-    max_value: float
-    min_value: float
+
+    # used for parsing
     optional: bool
     unique: bool
     unit: str
+
+    # used for recommendations
     categories: list[str]
+    feature_index: int
+    max_value: float
+    min_value: float
 
     def __init__(self, attribute_name: str, attribute_type: PlantAttributeType, unit: str = '', unique: bool = False,
                  optional: bool = False):
@@ -55,11 +60,12 @@ class PlantAttribute:
 class Plant:
     common_name: str
     family_common_name: str
-    name: str
+    scientific_name: str
 
     active_growth_period: str
     bloom_period: str
     drought_tolerance: str
+    duration: str
     family: str
     flower_color: str
     foliage_color: str
@@ -71,17 +77,20 @@ class Plant:
     growth_rate: str
     height: float
     lifespan: str
-    palatable: bool
     ph_minimum: float
     ph_maximum: float
     toxicity: str
+    type: str
 
     features: np.array
 
     plant_attributes: list[PlantAttribute] = [
         PlantAttribute("active_growth_period", PlantAttributeType.CATEGORICAL),
         PlantAttribute("bloom_period", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("climate", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("difficulty", PlantAttributeType.CATEGORICAL),
         PlantAttribute("drought_tolerance", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("duration", PlantAttributeType.CATEGORICAL),
         PlantAttribute("family", PlantAttributeType.CATEGORICAL),
         PlantAttribute("flower_color", PlantAttributeType.COLOR),
         PlantAttribute("foliage_color", PlantAttributeType.COLOR),
@@ -91,22 +100,29 @@ class Plant:
         PlantAttribute("fruit_color", PlantAttributeType.COLOR),
         PlantAttribute("growth_habit", PlantAttributeType.CATEGORICAL),
         PlantAttribute("growth_rate", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("height", PlantAttributeType.NUMERIC, 'm'),
+        PlantAttribute("height", PlantAttributeType.NUMERIC, 'm', optional=True),
+        PlantAttribute("humidity", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("leaf_shape", PlantAttributeType.CATEGORICAL),
         PlantAttribute("lifespan", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("palatable", PlantAttributeType.BOOL),
+        PlantAttribute("light", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("origin", PlantAttributeType.CATEGORICAL),
         PlantAttribute("ph_minimum", PlantAttributeType.NUMERIC),
         PlantAttribute("ph_maximum", PlantAttributeType.NUMERIC),
+        PlantAttribute("temperature", PlantAttributeType.CATEGORICAL),
         PlantAttribute("toxicity", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("type", PlantAttributeType.CATEGORICAL),
+        PlantAttribute("width", PlantAttributeType.NUMERIC, 'm', optional=True),
     ]
 
     other_attributes: list[PlantAttribute] = [
         PlantAttribute("common_name", PlantAttributeType.CATEGORICAL, optional=True),
         PlantAttribute("family_common_name", PlantAttributeType.CATEGORICAL, optional=True),
-        PlantAttribute("name", PlantAttributeType.CATEGORICAL, unique=True),
+        PlantAttribute("image", PlantAttributeType.CATEGORICAL, optional=True),
+        PlantAttribute("scientific_name", PlantAttributeType.CATEGORICAL, unique=True),
     ]
 
     def __str__(self):
-        return f"[{self.common_name}]"
+        return f"[{self.scientific_name}]"
 
 
 class UserPlant:

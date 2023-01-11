@@ -5,7 +5,7 @@ import json
 
 def get_plant_by_name(plant_list, name):
     for plant in plant_list:
-        if name == plant.name:
+        if name == plant.scientific_name:
             return plant
 
 
@@ -15,7 +15,8 @@ all_attributes = plant_attributes + Plant.other_attributes
 plants = parse_plants('../export/plants.csv', all_attributes)
 PlantRecommender.init_features(plants, plant_attributes)
 
-user = User(0, "Daniel", [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], [])
+priorities = [1.0 for _ in plant_attributes]
+user = User(0, "Daniel", priorities, [])
 
 # parse json
 with open("example.json") as json_file:

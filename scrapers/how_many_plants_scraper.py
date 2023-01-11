@@ -48,9 +48,30 @@ for path in plant_paths:
     plant_attr['humidity'] = basic_content[2].strip()
     plant_attr['temperature'] = basic_content[3].strip()
     plant_attr['toxicity'] = basic_content[4].strip()
-    plant_attr['size'] = basic_content[5].strip()
     plant_attr['format'] = basic_content[6].strip()
     plant_attr['leaf_shape'] = basic_content[7].strip()
+
+    # extract information from the details
+    details = sel.css('div.attribute-details-para-a > p::text').getall()
+    size_details = details[5].strip()
+    print(size_details)
+    words = size_details.split(' ')
+    word_index = 0
+    while word_index < len(words):
+        if words[word_index] == 'ft':
+            plant_attr['height'] = words[word_index - 1]
+            break
+        word_index += 1
+    word_index += 1
+    while word_index < len(words):
+        if words[word_index] == 'ft':
+            plant_attr['width'] = words[word_index - 1]
+            break
+        elif words[word_index] == 'similar':
+            plant_attr['width'] = plant_attr['height']
+            break
+        word_index += 1
+
     # concat plant_attr to plant_df
     plant_df = pd.concat([plant_df, pd.DataFrame(plant_attr, index=[0])])
     # sleep to avoid being blocked from further requests
