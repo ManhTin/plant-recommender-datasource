@@ -50,6 +50,12 @@ constant_attributes = [
 
 plants = parse('../data/PLANTS.csv', csv_attributes, constant_attributes, [], 'Yes')
 
+# plant_image_gallery.cvs
+csv_attributes = [
+    CsvAttribute('image_url', other_attributes[2]),
+]
+plants = parse_and_merge('../data/plant_image_gallery.csv', csv_attributes, plants)
+
 export_plants('../export/plants.csv', plants, all_attributes)
 
 # how_many_plants_data.cvs

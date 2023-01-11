@@ -14,9 +14,8 @@ plant_paths = selection.css('div.plant-index-grid a::attr(href)').getall()
 
 # initialize dataframe to store data
 plant_df = pd.DataFrame(columns=[
-    'name', 'official_name', 'alias', 'origins', 'climate', 'description',
-    'difficulty', 'water', 'light', 'humidity', 'temperature', 'toxicity',
-    'size', 'format', 'leaf_shape', 'image_url', 'url'])
+    'name', 'official_name', 'alias', 'origins', 'climate', 'description', 'difficulty', 'water', 'light', 'humidity',
+    'temperature', 'toxicity', 'format', 'leaf_shape', 'image_url', 'url', 'height', 'width'])
 
 # iterate through each url and store data in dataframe
 print('iterate plant urls and parse info...')
