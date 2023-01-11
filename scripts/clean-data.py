@@ -121,13 +121,15 @@ def contains_mapping_inner(input_value: str, output_list: list[str], entry: list
             return
 
 
-def contains_mapping(attribute_name: str, entry_list: list[list[str]], input_value: str) -> str:
+def contains_mapping(attribute_name: str, entry_list: list[list[str]], input_value: str, default_value: str = None) -> str:
     output_list = []
     input_value_formatted = input_value.lower()
     for entry in entry_list:
         contains_mapping_inner(input_value_formatted, output_list, entry)
     if len(output_list) == 0:
         print(f'No matching category for attribute "{attribute_name}" and value "{input_value}"')
+        if default_value is not None:
+            output_list.append(default_value)
     return ','.join(output_list)
 
 
@@ -135,6 +137,14 @@ def format_mapping(format_input: str) -> str:
     format_list = [['clusters'], ['leaves'], ['stems', 'stalks', 'stem', 'trunk'], ['tendrils'],
                    ['tree-like', 'tree-form'], ['vines']]
     return contains_mapping('format', format_list, format_input)
+
+
+def leaf_shape_mapping(leaf_shape_input: str) -> str:
+    leaf_shape_list = [['almond'], ['angel-wing'], ['arrowhead'], ['bundles'], ['dolphin'], ['frilly'], ['fronds'],
+                       ['heart'], ['lobed'], ['oblong'], ['oval'], ['paddle'], ['palmate'], ['ribbon-like blades'],
+                       ['rippled'], ['round'], ['scrunched'], ['slender'], ['spear'], ['split'], ['teardrop'], ['tiny'],
+                       ['triangular'], ['twisted'], ['violin'], ['zig-zag']]
+    return contains_mapping('leaf_shape', leaf_shape_list, leaf_shape_input, 'other')
 
 
 csv_attributes = [
@@ -149,8 +159,8 @@ csv_attributes = [
     CsvAttribute('temperature', plant_attributes[23]),
     CsvAttribute('toxicity', plant_attributes[24], mapping_function=toxicity_mapping),
     CsvAttribute('height', plant_attributes[15], mapping_function=height_width_mapping, unit='feet'),
-    CsvAttribute('leaf_shape', plant_attributes[17]),
     CsvAttribute('format', plant_attributes[13], mapping_function=format_mapping),
+    CsvAttribute('leaf_shape', plant_attributes[17], mapping_function=leaf_shape_mapping),
     CsvAttribute('image_url', other_attributes[2]),
     CsvAttribute('width', plant_attributes[26], mapping_function=height_width_mapping, unit='feet'),
 ]
@@ -164,5 +174,10 @@ derived_attributes = [
 ]
 
 plants = parse('../data/how_many_plants_data.csv', csv_attributes, constant_attributes, derived_attributes, 'Yes')
+#words = get_common_terms(plants, plant_attributes[17], 2)
+#for term, count in words.items():
+#    if count > 1:
+#        print(f'{term}: {count}')
+#print(words)
 
 export_plants('../export/plants.csv', plants, all_attributes, append=True)
