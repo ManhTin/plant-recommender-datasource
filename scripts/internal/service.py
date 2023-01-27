@@ -3,20 +3,6 @@ import math
 from .model import *
 
 
-class PlantAttributeService:
-    @staticmethod
-    def get_number_of_feature_slots(attribute_type: PlantAttributeType):
-        match attribute_type:
-            case PlantAttributeType.NUMERIC:
-                return 1
-            case PlantAttributeType.BOOL:
-                return 1
-            case PlantAttributeType.COLOR:
-                return 3
-            case PlantAttributeType.CATEGORICAL:
-                return 1
-
-
 class UserService:
     @staticmethod
     def init_user_attributes(user: User, plant_attributes: list[PlantAttribute]):
@@ -29,10 +15,13 @@ class UserService:
                     data.num_true += user_plant.plant.features[feature_index]
                 data.true_ratio = (data.num_true / len(user.user_plants)) - 0.5
             elif attribute_list[attribute_index].attribute_type == PlantAttributeType.CATEGORICAL:
-                data.category_distribution = np.zeros(len(attribute_list[attribute_index].categories))
+                num_categories = len(attribute_list[attribute_index].categories)
+                data.category_distribution = np.zeros(num_categories + 1)
                 for user_plant in user.user_plants:
-                    cat_index = user_plant.plant.features[feature_index]
-                    data.category_distribution[int(cat_index)] += 1
+                    for category_index in range(num_categories):
+                        is_in_category = user_plant.plant.features[feature_index + category_index]
+                        data.category_distribution[category_index] += is_in_category
+                        data.category_distribution[-1] += is_in_category
 
 
 class PlantRecommendation:
@@ -65,7 +54,21 @@ class PlantRecommender:
         number_features = 0
         for plant_attribute in plant_attributes:
             plant_attribute.feature_index = number_features
-            number_features += PlantAttributeService.get_number_of_feature_slots(plant_attribute.attribute_type)
+            match plant_attribute.attribute_type:
+                case PlantAttributeType.NUMERIC:
+                    number_features += 1
+                case PlantAttributeType.BOOL:
+                    number_features += 1
+                case PlantAttributeType.COLOR:
+                    number_features += 3
+                case PlantAttributeType.CATEGORICAL:
+                    for plant in new_plants:
+                        current_value = getattr(plant, plant_attribute.attribute_name)
+                        current_value = current_value.split(',')
+                        for val in current_value:
+                            if val not in plant_attribute.categories:
+                                plant_attribute.categories.append(val)
+                    number_features += len(plant_attribute.categories)
 
         # init feature array
         for plant in new_plants:
@@ -117,13 +120,10 @@ class PlantRecommender:
                 case PlantAttributeType.CATEGORICAL:
                     for plant in new_plants:
                         current_value = getattr(plant, plant_attribute.attribute_name)
-                        index = None
-                        if current_value in plant_attribute.categories:
-                            index = plant_attribute.categories.index(current_value)
-                        else:
-                            index = len(plant_attribute.categories)
-                            plant_attribute.categories.append(current_value)
-                        plant.features[feature_index] = index
+                        current_value = current_value.split(',')
+                        for val in current_value:
+                            index = plant_attribute.categories.index(val)
+                            plant.features[feature_index + index] = 1
 
     @staticmethod
     def init_features(plant_list: list[Plant], plant_attributes: list[PlantAttribute]):
@@ -163,8 +163,12 @@ class PlantRecommender:
                             attribute_score += 1 - (color_score / 3)
                         attribute_score /= len(user.user_plants)
                     case PlantAttributeType.CATEGORICAL:
-                        attribute_score = user.attribute_data[attribute_index].category_distribution[
-                                              int(plant.features[feature_index])] / len(plant_attribute.categories)
+                        num_categories = len(plant_attribute.categories)
+                        attribute_data = user.attribute_data[attribute_index]
+                        for category_index in range(num_categories):
+                            is_in_category = plant.features[feature_index + category_index]
+                            attribute_score += is_in_category * attribute_data.category_distribution[category_index]
+                            attribute_score /= attribute_data.category_distribution[-1]
 
                 score += user.attribute_data[attribute_index].priority * attribute_score
 
