@@ -28,7 +28,7 @@ class PlantAttributeType(Enum):
 
 
 class PlantAttribute:
-    __slots__ = "feature_index", "attribute_name", "attribute_type", "unique", "max_value", "min_value", "optional", "unit", "categories"
+    __slots__ = "feature_index", "attribute_name", "attribute_type", "unique", "max_value", "min_value", "optional", "unit", "categories", "default_priority"
     # general
     attribute_name: str
     attribute_type: PlantAttributeType
@@ -40,12 +40,13 @@ class PlantAttribute:
 
     # used for recommendations
     categories: list[str]
+    default_priority: float
     feature_index: int
     max_value: float
     min_value: float
 
-    def __init__(self, attribute_name: str, attribute_type: PlantAttributeType, unit: str = '', unique: bool = False,
-                 optional: bool = False):
+    def __init__(self, attribute_name: str, attribute_type: PlantAttributeType, default_priority: float = 1.0,
+                 unit: str = '', unique: bool = False, optional: bool = False):
         self.feature_index = -1
         self.attribute_name = attribute_name
         self.attribute_type = attribute_type
@@ -55,6 +56,7 @@ class PlantAttribute:
         self.unique = unique
         self.unit = unit
         self.categories = []
+        self.default_priority = default_priority
 
 
 class Plant:
@@ -85,33 +87,33 @@ class Plant:
     features: np.array
 
     plant_attributes: list[PlantAttribute] = [
-        PlantAttribute("active_growth_period", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("bloom_period", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("climate", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("difficulty", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("drought_tolerance", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("duration", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("family", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("flower_color", PlantAttributeType.COLOR),
-        PlantAttribute("foliage_color", PlantAttributeType.COLOR),
-        PlantAttribute("foliage_porosity_summer", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("foliage_porosity_winter", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("frost_free_days", PlantAttributeType.NUMERIC),
-        PlantAttribute("fruit_color", PlantAttributeType.COLOR),
-        PlantAttribute("growth_habit", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("growth_rate", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("height", PlantAttributeType.NUMERIC, 'm', optional=True),
-        PlantAttribute("humidity", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("leaf_shape", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("lifespan", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("light", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("origin", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("ph_minimum", PlantAttributeType.NUMERIC),
-        PlantAttribute("ph_maximum", PlantAttributeType.NUMERIC),
-        PlantAttribute("temperature", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("toxicity", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("type", PlantAttributeType.CATEGORICAL),
-        PlantAttribute("width", PlantAttributeType.NUMERIC, 'm', optional=True),
+        PlantAttribute("active_growth_period", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("bloom_period", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("climate", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("difficulty", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("drought_tolerance", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("duration", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("family", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("flower_color", PlantAttributeType.COLOR, 0.5),
+        PlantAttribute("foliage_color", PlantAttributeType.COLOR, 0.5),
+        PlantAttribute("foliage_porosity_summer", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("foliage_porosity_winter", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("frost_free_days", PlantAttributeType.NUMERIC, 0.5),
+        PlantAttribute("fruit_color", PlantAttributeType.COLOR, 0.5),
+        PlantAttribute("growth_habit", PlantAttributeType.CATEGORICAL, 1.0),
+        PlantAttribute("growth_rate", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("height", PlantAttributeType.NUMERIC, 1.0, unit='m', optional=True),
+        PlantAttribute("humidity", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("leaf_shape", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("lifespan", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("light", PlantAttributeType.CATEGORICAL, 0.5),
+        PlantAttribute("origin", PlantAttributeType.CATEGORICAL, 0.1),
+        PlantAttribute("ph_minimum", PlantAttributeType.NUMERIC, 0.2),
+        PlantAttribute("ph_maximum", PlantAttributeType.NUMERIC, 0.2),
+        PlantAttribute("temperature", PlantAttributeType.CATEGORICAL, 0.3),
+        PlantAttribute("toxicity", PlantAttributeType.CATEGORICAL, 0.4),
+        PlantAttribute("type", PlantAttributeType.CATEGORICAL, 1.0),
+        PlantAttribute("width", PlantAttributeType.NUMERIC, 1.0, unit='m', optional=True),
     ]
 
     other_attributes: list[PlantAttribute] = [

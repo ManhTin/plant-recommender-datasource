@@ -5,6 +5,13 @@ from .model import *
 
 class UserService:
     @staticmethod
+    def get_default_priorities(plant_attributes: list[PlantAttribute]) -> list[float]:
+        priorities = [0.0] * len(plant_attributes)
+        for attribute_index in range(len(plant_attributes)):
+            priorities[attribute_index] = plant_attributes[attribute_index].default_priority
+        return priorities
+
+    @staticmethod
     def init_user_attributes(user: User, plant_attributes: list[PlantAttribute]):
         attribute_list = plant_attributes
         for attribute_index in range(0, len(attribute_list)):

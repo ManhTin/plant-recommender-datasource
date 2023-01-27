@@ -7,7 +7,7 @@ all_attributes = plant_attributes + Plant.other_attributes
 
 plants = parse_plants('../export/plants.csv', all_attributes)
 
-priorities = [1.0 for _ in plant_attributes]
+priorities = UserService.get_default_priorities(plant_attributes)
 users = [User(0, "Daniel", priorities, [UserPlant(plants[8], 10), UserPlant(plants[9], 10)])]
 
 PlantRecommender.init_features(plants, plant_attributes)
